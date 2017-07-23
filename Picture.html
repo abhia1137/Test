@@ -1,0 +1,41 @@
+<DOCTYPE html>
+    <html>
+	      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">	</script>
+	
+		<body ng-app = 'app' ng-controller = 'myctrl'>
+		     <table border = 1>
+			     <thead>
+				    <tr>
+					   <th>Name</th>
+					   <th>Email</th>
+					   <th>Contact</th>
+					   <th>Gender</th>
+					</tr>
+				 </thead>
+				 
+				 <tbody>  
+				    <tr ng-repeat = 'info in information'>
+					    <td>{{info.name}}</td>
+						<td>{{info.email}}</td>
+						<td>{{info.contact}}</td>
+						<td>{{info.gender}}</td>
+					</tr>
+				 </tbody>
+			 </table>
+			 
+			 <script>
+			     var app = angular.module('app', [])
+						app.controller('myctrl'['$http', '$scope', function($scope, $http){
+						  $http({
+									method:'GET',
+									url: 'information'
+						}).then(function(response){
+						$scope.information 	= response.data;
+							});
+						}]);
+			 </script>
+		</body>
+    </html>
