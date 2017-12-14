@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+<body ng-app = 'app' ng-controller = 'ctrl'>
+<h1>It is working</h1>
+
+<div class="row">
+<input type="text" ng-model = 'name'> 
+<input type="text" ng-model = 'age'>
+<input type="button" ng-click = 'search()' value="Click"></br>
+
+<input type="text" ng-model = 'detail.name' placeholder="Enter Name">
+<input type="text" ng-model = 'detail.age' placeholder="Enter age">
+<input type="text" ng-model = 'detail.Country' placeholder="Enter Country">
+<input type="button" ng-click = 'Submit()' value="Submit">
+
+<div class="col-md-6">
+<ul ng-repeat = 'info in information'></br>
+
+<div>
+<input type="button" ng-model = 'gain' value="Edit" ng-click= 'edit(info._id)' >
+<a href = 'http://localhost:4444/' target="blank"> <input type="button" value="Remove"  ng-click = 'remove(info._id)'></a>
+</div>
+
+	Name:		{{info.name}} <div ng-if = "gain"><input type="text" ng-model = 'info.name'></div><br> 
+	Age:		{{info.age}} <div ng-if = "gain"><input type="text" ng-model = 'info.age'></div><br>
+	Country:	{{info.Country}} <div ng-if = "gain"><input type="text" ng-model = 'info.Country'></div><br>
+	ID: {{info._id}}<div ng-if = "gain"><input type="text" ng-model = 'info._id'></div>
+<div ng-if = 'gain'><input type="button" value = "Save" ng-click = 'save()'></div>
+</ul>
+</div>
+</div>
+<h1 id = 'data'>	</h1>
+<script type="text/javascript">
+	var app = angular.module('app' , [])
+	app.controller('ctrl', function ($scope, $http){
+		$scope.search = function(val){
+		$http({
+				method:"GET",
+				url:"/details?name=" +$scope.name
+				}).then(function(res){
+				$scope.information = res.data;
+				//console.log(res.data.length);
+				console.log($scope.information.length);
+				console.log($scope.info);
+				console.log($scope.information[0]._id)
+				});
+			}
+		$scope.Submit =  function () {
+				console.log($scope.detail);
+				//var data = 'data submitted';
+				//alert('data sub+mitted');
+				//
+				$http.post('/details', $scope.detail).then(function(res){
+					document.getElementById('data').innerHTML = "data submitted";
+			})	
+		}
+		$scope.edit = function(id){
+			$scope.gain =true;
+		  $scope.save = function(){
+			$scope.gain = false;
+			$http.put( "/details" +$scope.info._id, +$scope.info).then(function(res){
+				console.log($scope.info)
+				console.log(id);
+				$scope.information = res.data;
+			});
+		}
+	}
+	$scope.remove = function(id){
+		//alert(id);
+		$http.delete('/details/' + id).then(function(res){
+		
+		})
+	}
+});
+</script>
+</body>
+</html>
